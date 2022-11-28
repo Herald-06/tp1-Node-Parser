@@ -28,7 +28,7 @@ app.get('/tp1', (rep, res)=>{
                 entry.pipe(csv())
                 .on('data', (data) => tableau.push(data))
                 .on('end', () => { tableau.forEach(element => {
-                    if(element.transfertSiege=='true') {
+                    if(element.transfertSiege =='true') {
                         countTrue++;
                     }
                     i++
