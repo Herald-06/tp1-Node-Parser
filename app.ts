@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 
-const port = 3000
+const port = 3001
 var http = require('http');
 const fs = require('fs');
 const { count } = require('console');
@@ -14,10 +14,6 @@ app.get('/tp1', (req, res) => {
     const download = require('download')
     const unzip = require('unzip-stream')
 
-    const tableau = [];
-    var i = 0;
-    var countTrue = 0;
-
     console.log("xxxxxxxxxx")
 
     download('https://files.data.gouv.fr/insee-sirene/StockEtablissementLiensSuccession_utf8.zip', 'data').then(() => {
@@ -26,18 +22,15 @@ app.get('/tp1', (req, res) => {
     
         fs.createReadStream('data/StockEtablissementLiensSuccession_utf8.zip')
             .pipe(unzip.Parse())
-            .on('entry', function(entry) {
+            .on('entry', function(entry:any) {
                 // console.log(entry)
                 console.log("///////")
 
-                var fileName = entry.path;
+                var fileName : string = entry.path;
                 // console.log(entry.path);
-                const type = entry.type;
-                const size = entry.size;
 
-                const tableau = [];
-                var i = 0;
-                var countTrue = 0;
+                var i : number = 0;
+                var countTrue : number = 0;
 
                 console.log("----x-----")
                 if (fileName === "StockEtablissementLiensSuccession_utf8.csv") {
@@ -45,7 +38,7 @@ app.get('/tp1', (req, res) => {
 
                     // console.log(fileName);
                     entry.pipe(csv())
-                    .on('data', function(data) {
+                    .on('data', function(data:any) {
                         console.log(i)
                             if(data.transfertSiege == 'true') {
                                 countTrue++;
@@ -55,7 +48,7 @@ app.get('/tp1', (req, res) => {
                     })
                     .on('end', function()  {
 
-                        let percent = countTrue/i*100;
+                        let percent : number = countTrue/i*100;
                         res.send(`Avant le 1er Novembre 2022, ${percent.toFixed(2)}% des compagnies française
                         ont déplacé leurs siège social !`)
                     });
@@ -66,5 +59,3 @@ app.get('/tp1', (req, res) => {
 })
 
 app.listen(port, () => console.log(`Listening port ${port} !`))
-
-//app.listen(port, () => console.log(`Listening port ${2000} !`))
